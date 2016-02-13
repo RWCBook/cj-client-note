@@ -93,7 +93,7 @@ function addNote(elm, note, props) {
     rtn = utils.exception(error);
   }
   else {
-    storage(elm, 'add', setProps(item,props));
+    storage(elm, 'add', utils.setProps(item,props));
   }
   
   return rtn;
@@ -128,7 +128,7 @@ function updateNote(elm, id, note, props) {
       rtn = utils.exception(error);
     } 
     else {
-      storage(elm, 'update', id, setProps(item, props));
+      storage(elm, 'update', id, utils.setProps(item, props));
     }
   }
   
@@ -178,7 +178,7 @@ function assignTask(elm, id, note, props) {
       rtn = utils.exception(error);
     } 
     else {
-      storage(elm, 'update', id, setProps(item, props));
+      storage(elm, 'update', id, utils.setProps(item, props));
     }
   }
   

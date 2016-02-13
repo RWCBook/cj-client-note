@@ -124,7 +124,7 @@ function sendListPage(req, res, respond) {
   respond(req, res, {
     code : 200,
     doc : {
-      tag : doc
+      note : doc
     }
   });
   
@@ -182,7 +182,7 @@ function sendItemPage(req, res, respond, id) {
     respond(req, res, {
       code : 200,
       doc : {
-        tag : doc
+        note : doc
       }
     });
   }  
@@ -245,7 +245,7 @@ function sendAssignPage(req, res, respond, id) {
     respond(req, res, {
       code : 200,
       doc : {
-        tag : doc
+        note : doc
       }
     });
   }  

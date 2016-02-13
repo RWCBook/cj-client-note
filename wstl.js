@@ -564,6 +564,84 @@ function loadTrans() {
     ]
   });  
 
+  /************************************
+  NOTES
+  *************************************/
+  trans.push({
+    name : "noteLinkItem",
+    type : "safe",
+    action : "read",
+    kind : "note",
+    target : "item hal siren cj read href",
+    prompt : "Detail",
+    html : {
+      className : "item link ui basic blue button"
+    }
+  });
+
+  trans.push({
+    name : "noteFormListByTitle",
+    type : "safe",
+    action : "read",
+    kind : "note",
+    target : "list query hal siren cj",
+    prompt : "Search By Title",
+    inputs : [
+      {name : "title", prompt : "Title", value : ""}
+    ]
+  });
+
+  trans.push({
+    name : "noteFormListByText",
+    type : "safe",
+    action : "read",
+    kind : "note",
+    target : "list query hal siren cj",
+    prompt : "Search By Note Text",
+    inputs : [
+      {name : "text", prompt : "Text", value : ""}
+    ]
+  });
+
+  // add task
+  trans.push({
+    name : "noteFormAdd",
+    type : "unsafe",
+    action : "append",
+    kind : "note",
+    target : "list add hal siren cj-template",
+    prompt : "Add Note",
+    inputs : [
+      {name : "title", prompt : "Title", required : true},
+      {name : "assignedTask", prompt : "Assigned Task", required : true},
+      {name : "text", prompt : "Text"}
+    ]
+  });
+
+  trans.push({
+    name : "noteAssignLink",
+    type : "safe",
+    action : "read",
+    kind : "note",
+    target : "item cj read",
+    prompt : "Assign Task",
+    html : {
+      className : "item action ui basic blue button"
+    }
+  });
+  trans.push({
+    name : "noteAssignForm",
+    type : "unsafe",
+    action : "append",
+    kind : "note",
+    target : "item assign edit post form hal siren cj-template",
+    prompt : "Assign Task",
+    inputs : [
+      {name: "id", prompt:"ID", readOnly:true},
+      {name: "assignedTask", prompt:"Task ID", value:"", requried:true, suggest:{related:"tasklist", value:"id",text:"title"}, type:"select"}
+    ]
+  });
+
   // return complete 
   // design-time WSTL
   return trans;
