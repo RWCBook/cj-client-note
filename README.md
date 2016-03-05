@@ -9,3 +9,10 @@
 Check out the [running sample](http://rwcbook13.herokuapp.com/files/cj-client.html)
 
 More on the book [RESTful Web Clients](http://shop.oreilly.com/product/0636920037958.do)
+
+## Usage
+
+```
+$ npm i
+$ node app.js
+```
