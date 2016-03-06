@@ -13,6 +13,7 @@ var folder = process.cwd() + '/files/';
 // for profile work
 var task = require('./../components/task-component.js');
 var user = require('./../components/user-component.js');
+var note = require('./../components/note-component.js');
 
 // for handling hal-forms extension
 var halFormType = "application/prs.hal-forms+json";
@@ -51,6 +52,9 @@ exports.profile = function(name) {
       break;
     case "user":
       rtn = user("profile");
+      break;
+    case "note":
+      rtn = note("profile");
       break;
     default:
       rtn = {};

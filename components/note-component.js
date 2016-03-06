@@ -114,15 +114,15 @@ function updateNote(elm, id, note, props) {
     item.text = (note.text===undefined?check.text:note.text);
     item.assignedTask = check.assignedTask
 
-  if(item.title === "") {
-    error += "Missing Title ";
-  }
-  if(item.assignedTask==="") {
-    error += "Missing Assigned Task ";
-  } 
-  if(component.task('exists', item.assignedTask)===false) {
-    error += "Task ID not found. ";
-  }  
+    if(item.title === "") {
+      error += "Missing Title ";
+    }
+    if(item.assignedTask==="") {
+      error += "Missing Assigned Task ";
+    } 
+    if(component.task('exists', item.assignedTask)===false) {
+      error += "Task ID not found. ";
+    }  
     
     if(error!=="") {
       rtn = utils.exception(error);
@@ -160,7 +160,7 @@ function assignTask(elm, id, note, props) {
   }
   else {
     if(note.assignedTask===undefined||note.assignedTask.length===0) {
-      error += "Missing Asssigned Task ";
+      error += "Missing Assigned Task ";
     }
     if(component.task('exists',note.assignedTask)===false) {
       error += "Task ID not found ";

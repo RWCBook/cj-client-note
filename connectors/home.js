@@ -39,6 +39,8 @@ function sendPage(req, res, respond) {
     rel:["task","collection"],root:root},coll); 
   coll = wstl.append({name:"userLink",href:"/user/",
     rel:["user","collection"],root:root},coll);
+  coll = wstl.append({name:"noteLink",href:"/note/",
+    rel:["collection","/rels/note"],root:root},coll);
   coll = wstl.append({name:"homeProfile",href:"/files/home.profile",
     rel:["profile"],root:root},coll);
   

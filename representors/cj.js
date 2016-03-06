@@ -35,7 +35,7 @@ function cj(object, root) {
     rtn.collection.template = getTemplate(object[o].actions);
   
     // move template href to document level
-    if(rtn.collection.template.href) {
+    if(rtn.collection.template && rtn.collection.template.href) {
       rtn.collection.href = rtn.collection.template.href;
       delete rtn.collection.template.href;
     }
@@ -120,24 +120,28 @@ function getItems(obj, root) {
       data = [];
       for(var d in temp) {
         if(d!=="meta") {
-          data.push(
-            {
-              name : d, 
-              value : temp[d], 
-              prompt : (g.profile[d].prompt||d), 
-              display:(g.profile[d].display.toString()||"true")
-            }
-          );
-          tvars[d] = temp[d];
+          if(g.profile && g.profile[d]) {
+            data.push(
+              {
+                name : d, 
+                value : temp[d], 
+                prompt : (g.profile[d].prompt||d), 
+                display:(g.profile[d].display.toString()||"true")
+              }
+            );
+            tvars[d] = temp[d];
+          }
         }
       }
       item.data = data;
       
       // resolve URL template
-      tpl = urit.parse(link.href);
-      url = tpl.expand(tvars);
-      item.href = url;
-
+      if(link) {
+        tpl = urit.parse(link.href);
+        url = tpl.expand(tvars);
+        item.href = url;
+      }
+      
       // share item set for others
       if(coll.length===1) {
         g.tvars = tvars;
@@ -197,7 +201,6 @@ function getQueries(obj) {
 function getTemplate(obj) {
   var data, temp, field, rtn, tpl, url, d, i, x, j, y;
   
-  rtn = {};
   data = [];
   
   if(Array.isArray(obj)!==false) {
@@ -208,6 +211,7 @@ function getTemplate(obj) {
         isAdd=obj[i].target.indexOf("add")!==-1;
         
         // build template
+        if(!rtn) {rtn = {};}
         rtn.prompt = temp.prompt;
         rtn.rel = temp.rel.join(" ");
         rtn.href = temp.href;
@@ -237,7 +241,9 @@ function getTemplate(obj) {
     }
   }
   
-  rtn.data = data;
+  if(rtn) {
+    rtn.data = data;
+  }
   
   return rtn;
 }
@@ -277,7 +283,6 @@ function getItemLinks(obj, tvars) {
 function getItemLink(obj) {
   var data, temp, rtn, d, i, x, j, y;
   
-  rtn = {};
   data = [];
   
   if(Array.isArray(obj)!==false) {
@@ -288,6 +293,7 @@ function getItemLink(obj) {
       ) 
       {
         temp = obj[i];
+        if(!rtn){rtn={};}
         rtn.prompt = temp.prompt;
         rtn.rel = temp.rel.join(" ");
         rtn.href = temp.href;

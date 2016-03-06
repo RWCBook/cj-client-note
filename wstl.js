@@ -399,8 +399,8 @@ function loadTrans() {
     target : "item assign edit post form hal siren cj-template",
     prompt : "Assign User",
     inputs : [
-      {name: "id", prompt:"ID", readOnly:true},
-      {name: "assignedUser", prompt:"User Nickname", value:"", requried:true, suggest:{related:"userlist", value:"nick",text:"nick"}, type:"select"}
+      {name: "id", prompt:"ID", readOnly:true, required:true},
+      {name: "assignedUser", prompt:"User Nickname", value:"", required:true, suggest:{related:"userlist", value:"nick",text:"nick"}, type:"select"}
     ]
   });
 
@@ -572,7 +572,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "note",
-    target : "item hal siren cj read href",
+    target : "item hal siren cj href",
     prompt : "Detail",
     html : {
       className : "item link ui basic blue button"
@@ -637,7 +637,7 @@ function loadTrans() {
     target : "item assign edit post form hal siren cj-template",
     prompt : "Assign Task",
     inputs : [
-      {name: "id", prompt:"ID", readOnly:true},
+      {name: "id", prompt:"ID", readOnly:true, required:true},
       {name: "assignedTask", prompt:"Task ID", value:"", requried:true, suggest:{related:"tasklist", value:"id",text:"title"}, type:"select"}
     ]
   });

@@ -151,7 +151,7 @@ function cj() {
             href:item.href,
             rel:item.rel,
             className:"item link ui basic blue button",
-            text:item.rel
+            text:item.prompt||"Read"
           }
         );
         a1.onclick = httpGet;
@@ -274,7 +274,16 @@ function cj() {
         header.className = "ui dividing header";
         d.push(header,fs);
         for(var data of query.data) {
-          p = d.input({prompt:data.prompt,name:data.name,value:data.value});
+          p = d.input(
+            {
+              prompt:data.prompt,
+              name:data.name,
+              value:data.value,
+              required:data.required,
+              readOnly:data.readOnly,
+              pattern:data.pattern
+            }
+          );
           d.push(p,fs);
         }
         p = d.node("p");

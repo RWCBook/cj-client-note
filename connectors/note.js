@@ -15,6 +15,17 @@ var components = {};
 components.note = require('./../components/note-component.js');
 components.task = require('./../components/task-component.js');
 
+var content = "";
+content += '<div class="ui segment">';
+content += '<h3>Manage your TPS Notes here.</h3>';
+content += '<p>You can do the following:</p>';
+content += '<ul>';
+content += '<li>Add, Edit and Delete notes</li>';
+content += '<li>Assign notes to a task</li>';
+content += '<li>Filter the list by Title and Text content.</li>';
+content += '</ul>';
+content += '</div>';
+
 module.exports = main;
 
 function main(req, res, parts, respond) {
@@ -22,7 +33,6 @@ function main(req, res, parts, respond) {
   
   flag = false;
   switch (req.method) {
-  case 'GET':
     case 'GET':
       if(flag===false && parts[1]==="assign" && parts[2]) {
         flag=true;
@@ -53,6 +63,26 @@ function main(req, res, parts, respond) {
         addNote(req, res, respond);
       }
     break;  
+    case "PUT":
+      if(parts[1] && parts[1].indexOf('?')===-1) {
+        updateNote(req, res, respond, parts[1]);
+      }
+      else {
+        respond(req, res, 
+          utils.errorResponse(req, res, 'Method Not Allowed', 405)
+        );          
+      }
+    break;
+    case 'DELETE':
+      if(parts[1] && parts[1].indexOf('?')===-1) {
+        removeNote(req, res, respond, parts[1]);
+      }
+      else {
+        respond(req, res, 
+          utils.errorResponse(req, res, 'Method Not Allowed', 405)
+        );          
+      }
+    break;    
   default:
     respond(req, res, utils.errorResponse(req, res, 'Method Not Allowed', 405));
     break;
@@ -60,12 +90,11 @@ function main(req, res, parts, respond) {
 }
 
 function sendListPage(req, res, respond) {
-  var doc, coll, root, q, qlist, code, content, related;
+  var doc, coll, root, q, qlist, code, related;
 
   root = '//'+req.headers.host;
   coll = [];
   data = [];
-  content = "";
   related = {};
   
   // parse any filter on the URL line
@@ -94,7 +123,7 @@ function sendListPage(req, res, respond) {
 
   // item links
   wstl.append({name:"noteLinkItem",href:"/note/{id}",
-    rel:["item","/rels/item"],root:root},coll);
+    rel:["item"],root:root},coll);
   wstl.append({name:"noteAssignLink",href:"/note/assign/{id}",
     rel:["edit-form","/rels/noteAssignTask"],root:root},coll);
 
@@ -114,12 +143,8 @@ function sendListPage(req, res, respond) {
   doc.actions = coll;
   doc.data =  data;
   doc.related = related;
-  if(doc.data.length===0) {
-    doc.content = "No notes on file."
-  }
-  else {
-    doc.content = "";
-  }
+  doc.content = content;
+
   // send the graph
   respond(req, res, {
     code : 200,
@@ -131,15 +156,14 @@ function sendListPage(req, res, respond) {
 }
 
 function sendItemPage(req, res, respond, id) {
-  var doc, coll, data, code, content, related;
+  var doc, coll, data, code, related;
 
   root = '//'+req.headers.host;
   coll = [];
   data = [];
-  content = "";
   related = {};
 
-  related.tasklist = other.task('list');
+  related.tasklist = components.task('list');
   
   // load data item
   item = components.note('read',id);
@@ -162,9 +186,13 @@ function sendItemPage(req, res, respond, id) {
 
     // item links
     wstl.append({name:"noteLinkItem",href:"/note/{id}",
-      rel:["item","/rels/item"],root:root},coll);
+      rel:["item"],root:root},coll);
     wstl.append({name:"noteAssignLink",href:"/note/assign/{id}",
       rel:["edit-form","/rels/noteAssignTask"],root:root},coll);
+
+    // add template
+    wstl.append({name:"noteFormAdd",href:"/note/",
+      rel:["create-form","/rels/noteAdd"],root:root},coll);
 
     // compose graph 
     doc = {};
@@ -172,12 +200,8 @@ function sendItemPage(req, res, respond, id) {
     doc.actions = coll;
     doc.data =  data;
     doc.related = related;
-    if(doc.data.length===0) {
-      doc.content = "No notes on file."
-    }
-    else {
-      doc.content = "";
-    }
+    doc.content = content;
+
     // send the graph
     respond(req, res, {
       code : 200,
@@ -189,16 +213,15 @@ function sendItemPage(req, res, respond, id) {
 }
 
 function sendAssignPage(req, res, respond, id) {
-  var doc, coll, data, code, content, related;
+  var doc, coll, data, code, related;
 
   root = '//'+req.headers.host;
   coll = [];
   data = [];
-  content = "";
   related = {};
 
   // load related data
-  related.tasklist = other.task('list');
+  related.tasklist = components.task('list');
   
   // load data item
   item = components.note('read',id);
@@ -221,12 +244,12 @@ function sendAssignPage(req, res, respond, id) {
 
     // item links
     wstl.append({name:"noteLinkItem",href:"/note/{id}",
-      rel:["item","/rels/item"],root:root},coll);
+      rel:["item"],root:root},coll);
     wstl.append({name:"noteAssignLink",href:"/note/assign/{id}",
       rel:["edit-form","/rels/noteAssignTask"],root:root},coll);
 
     // edit form
-    wstl.append({name:"noteFormAssignPost",href:"/note/assign/{id}",
+    wstl.append({name:"noteAssignForm",href:"/note/assign/{id}",
       rel:["create-form","/rels/noteAssign"],root:root},coll);
 
     // compose graph 
@@ -235,12 +258,8 @@ function sendAssignPage(req, res, respond, id) {
     doc.actions = coll;
     doc.data =  data;
     doc.related = related;
-    if(doc.data.length===0) {
-      doc.content = "No notes on file."
-    }
-    else {
-      doc.content = "";
-    }
+    doc.content =  content;
+
     // send the graph
     respond(req, res, {
       code : 200,
